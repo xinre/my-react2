@@ -1,4 +1,4 @@
-import { renderCompoonent } from '../react-dom/render';
+import { renderComponent } from '../react-dom/render';
 
 class Component {
     constructor(props = {}) {
@@ -9,7 +9,7 @@ class Component {
     }
     setState(stateChange) {
         Object.assign(this.state, stateChange);
-        renderCompoonent(this);
+        renderComponent(this);
     }
 }
 

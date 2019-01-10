@@ -27,16 +27,48 @@ export function setAttribute(dom, name, value) {
 }
 
 function createComponent(component, props) {
-    let init;
-    if (component.protype && component.protype.render) {
-        init = new component(props);
+    let inst;
+    if (component.prototype && component.prototype.render) {
+        inst = new component(props);
     } else {
-        init = new Component(props);
-        init.constructor = component;
-        init.render = function () {
+        inst = new Component(props);
+        inst.constructor = component;
+        inst.render = function () {
             return this.constructor(props);
         }
     }
+
+    return inst;
+}
+
+
+function setComponentProps(component, props) {
+    if (!component.base) {
+        if (component.componentWillMount) component.componentWillMount();
+    } else if (component.componentWillReceiveProps) {
+        component.componentWillReceiveProps(props);
+    }
+    component.props = props;
+    renderComponent(component);
+}
+
+export function renderComponent(component) {
+    let base;
+    const renderer = component.render();
+    if (component.base && component.componentWillUpdate) {
+        component.componentWillUpdate()
+    }
+    base = _render(renderer);
+    if (component.base) {
+        if (component.componentDidUpdate) component.componentDidUpdate();
+    } else if (component.componentDidMount) {
+        component.componentDidMount();
+    }
+    if (component.base && component.base.parentNode) {
+        component.base.parentNode.replaceChild(base, component.base);
+    }
+    component.base = base;
+    base._component = component;
 }
 
 function _render(vnode) {
