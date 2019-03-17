@@ -26,7 +26,7 @@ export function setAttribute(dom, name, value) {
     }
 }
 
-function createComponent(component, props) {
+export function createComponent(component, props) {
     let inst;
     if (component.prototype && component.prototype.render) {
         inst = new component(props);
@@ -42,7 +42,7 @@ function createComponent(component, props) {
 }
 
 
-function setComponentProps(component, props) {
+export function setComponentProps(component, props) {
     if (!component.base) {
         if (component.componentWillMount) component.componentWillMount();
     } else if (component.componentWillReceiveProps) {

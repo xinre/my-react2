@@ -111,6 +111,8 @@ Object.defineProperty(exports, "__esModule", {
   value: true
 });
 exports.setAttribute = setAttribute;
+exports.createComponent = createComponent;
+exports.setComponentProps = setComponentProps;
 exports.renderComponent = renderComponent;
 exports.render = render;
 
