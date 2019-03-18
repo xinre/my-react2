@@ -15,7 +15,7 @@ import {createComponent,setComponentProps,setAttribute} from './render.js';
      return ret;
  }
 
- function diffNode(dom,vnode){
+ export function diffNode(dom,vnode){
     let out = dom;
     if ( vnode === undefined || vnode === null || typeof vnode === 'boolean' ) vnode = '';
      
@@ -79,8 +79,46 @@ import {createComponent,setComponentProps,setAttribute} from './render.js';
              }
          }
      }
-     
 
+     if(vchildren && vchildren.length > 0){
+         let min = 0;
+         let childrenLen = children.length;
+
+         for(let i = 0; i<vchildren.length;i++){
+             const vchild = vchildren[i];
+             const key = vchild.key;
+             let child;
+
+             if(key){
+                 if(keyed[key]){
+                     child = keyed[key];
+                     keyed[key] = undefined;
+                 }
+             } else if(min<childrenLen){
+                 for(let j = min; j<childrenLen;j++){
+                     let c = children[j];
+                     if(c && isSameNodeType(c,vchild)){
+                         child = c;
+                         children[j] = undefined;
+                         if(j===childrenLen - 1) j=childrenLen;
+                         if(j===min) min++;
+                         break;
+                     }
+                 }
+             }
+             child = diff( child, vchild );
+             const f = domChildren[i];
+             if(child && child !== dom && child !== f){
+                 if(!f){
+                     dom.appendChild(child)
+                 }else if(child === f.nextSibling){
+                     removeNode(f);
+                 }else{
+                    dom.insertBefore( child, f );
+                 }
+             }
+         }
+     }
      
  }
 

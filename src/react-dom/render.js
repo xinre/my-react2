@@ -1,4 +1,5 @@
 import Component from '../react/component';
+import {diffNode} from './diff.js';
 
 export function setAttribute(dom, name, value) {
     if (name === 'className') name = 'class';
@@ -58,15 +59,17 @@ export function renderComponent(component) {
     if (component.base && component.componentWillUpdate) {
         component.componentWillUpdate()
     }
-    base = _render(renderer);
+    // base = _render(renderer);
+    base = diffNode( component.base, renderer );
+
     if (component.base) {
         if (component.componentDidUpdate) component.componentDidUpdate();
     } else if (component.componentDidMount) {
         component.componentDidMount();
     }
-    if (component.base && component.base.parentNode) {
-        component.base.parentNode.replaceChild(base, component.base);
-    }
+    // if (component.base && component.base.parentNode) {
+    //     component.base.parentNode.replaceChild(base, component.base);
+    // }
     component.base = base;
     base._component = component;
 }
