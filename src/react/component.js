@@ -1,4 +1,4 @@
-import { renderComponent } from '../react-dom/render';
+import {asyncSetstate} from './asyncSetstate.js';
 
 class Component {
     constructor(props = {}) {
@@ -8,8 +8,7 @@ class Component {
         this.props = props;
     }
     setState(stateChange) {
-        Object.assign(this.state, stateChange);
-        renderComponent(this);
+        asyncSetstate(stateChange,this);
     }
 }
 
